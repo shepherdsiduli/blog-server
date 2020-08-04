@@ -18,13 +18,13 @@ public class BlogController {
 
     @RequestMapping(value = "/initialize", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<?>  addBlogs() {
+    public ResponseEntity<?> addBlogs() {
         List<String> blogs = new ArrayList<>();
         blogs.add("blog test 1");
         blogs.add("blog test 2");
         blogs.add("blog test 3");
 
-        for (String blog : blogs){
+        for (String blog : blogs) {
             createBlog(blog);
         }
         return new ResponseEntity(blogRepository.findAll(), HttpStatus.ACCEPTED);
@@ -37,9 +37,14 @@ public class BlogController {
     }
 
     @RequestMapping("/update")
-    public ResponseEntity<?>  edit(@PathVariable String id, @RequestParam String content, @RequestParam Integer likes) {
+    public ResponseEntity<?> edit(@PathVariable String id, @RequestParam String content, @RequestParam Integer likes) {
 
         Optional<Blog> blog = blogRepository.findById(id);
+
+        if (blog == null || !blog.isPresent() || blog.get() == null) {
+            return new ResponseEntity("Blog " + id + " does not exist", HttpStatus.NOT_FOUND);
+        }
+
         blog.get().setContent(content);
         blog.get().setLikes(likes);
         blogRepository.save(blog.get());
@@ -50,8 +55,8 @@ public class BlogController {
     @RequestMapping(value = "/create", method = RequestMethod.PUT)
     @ResponseBody
     public ResponseEntity<?> createBlog(@RequestParam String content) {
-        if(alreadyAdded(content)){
-            System.out.println("Already added : "+ content);
+        if (alreadyAdded(content)) {
+            System.out.println("Already added : " + content);
             return new ResponseEntity("Already added", HttpStatus.CONFLICT);
         } else {
             Blog blog = new Blog();
@@ -66,7 +71,11 @@ public class BlogController {
     @ResponseBody
     public ResponseEntity<?> likeBlog(@RequestParam String id) {
         Optional<Blog> blog = blogRepository.findById(id);
-        // check if blog exists
+
+        if (blog == null || !blog.isPresent() || blog.get() == null) {
+            return new ResponseEntity("Blog " + id + " does not exist", HttpStatus.NOT_FOUND);
+        }
+
         blog.get().setLikes(blog.get().getLikes() + 1);
         blogRepository.save(blog.get());
         return new ResponseEntity(HttpStatus.ACCEPTED);
@@ -76,14 +85,18 @@ public class BlogController {
     @ResponseBody
     public ResponseEntity<?> deleteBlog(String id) {
         Optional<Blog> blog = blogRepository.findById(id);
-        // check if blog exists
+
+        if (blog == null || !blog.isPresent() || blog.get() == null) {
+            return new ResponseEntity("Blog " + id + " does not exist", HttpStatus.NOT_FOUND);
+        }
+
         blogRepository.delete(blog.get());
         return new ResponseEntity(HttpStatus.ACCEPTED);
     }
 
-    private boolean alreadyAdded(String blog){
-        for (Blog b : blogRepository.findAll()){
-            if(blog.toLowerCase().equals(b.getContent().toLowerCase())){
+    private boolean alreadyAdded(String blog) {
+        for (Blog b : blogRepository.findAll()) {
+            if (blog.toLowerCase().equals(b.getContent().toLowerCase())) {
                 return true;
             }
         }
