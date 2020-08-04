@@ -32,7 +32,7 @@ public class BlogController {
 
     @RequestMapping(value = "/get", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<?>  getBlogs() {
+    public ResponseEntity<?> getBlogs() {
         return new ResponseEntity(blogRepository.findAll(), HttpStatus.ACCEPTED);
     }
 
@@ -44,7 +44,7 @@ public class BlogController {
         blog.get().setLikes(likes);
         blogRepository.save(blog.get());
 
-        return new ResponseEntity(blog.get(), HttpStatus.ACCEPTED);
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.PUT)
@@ -58,7 +58,7 @@ public class BlogController {
             blog.setContent(content);
             blog.setLikes(0);
             blogRepository.save(blog);
-            return new ResponseEntity(blog, HttpStatus.ACCEPTED);
+            return new ResponseEntity(HttpStatus.ACCEPTED);
         }
     }
 
@@ -66,17 +66,19 @@ public class BlogController {
     @ResponseBody
     public ResponseEntity<?> likeBlog(@RequestParam String id) {
         Optional<Blog> blog = blogRepository.findById(id);
+        // check if blog exists
         blog.get().setLikes(blog.get().getLikes() + 1);
         blogRepository.save(blog.get());
-        return new ResponseEntity(blog, HttpStatus.ACCEPTED);
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     @ResponseBody
     public ResponseEntity<?> deleteBlog(String id) {
         Optional<Blog> blog = blogRepository.findById(id);
+        // check if blog exists
         blogRepository.delete(blog.get());
-        return new ResponseEntity(blog, HttpStatus.ACCEPTED);
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
 
     private boolean alreadyAdded(String blog){

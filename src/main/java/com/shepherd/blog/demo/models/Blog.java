@@ -16,7 +16,6 @@ public class Blog {
     public Blog(){
 
     }
-
     public Blog(String id, String content, Integer likes){
         this.id = id;
         this.content = content;
