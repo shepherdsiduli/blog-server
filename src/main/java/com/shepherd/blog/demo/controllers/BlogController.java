@@ -16,6 +16,7 @@ public class BlogController {
     @Autowired
     BlogRepository blogRepository;
 
+    @CrossOrigin
     @RequestMapping(value = "/initialize", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<?> addBlogs() {
@@ -30,12 +31,14 @@ public class BlogController {
         return new ResponseEntity(blogRepository.findAll(), HttpStatus.ACCEPTED);
     }
 
+    @CrossOrigin
     @RequestMapping(value = "/get", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<?> getBlogs() {
         return new ResponseEntity(blogRepository.findAll(), HttpStatus.ACCEPTED);
     }
 
+    @CrossOrigin
     @RequestMapping("/update")
     public ResponseEntity<?> edit(@PathVariable String id, @RequestParam String content, @RequestParam Integer likes) {
 
@@ -52,6 +55,7 @@ public class BlogController {
         return new ResponseEntity(HttpStatus.ACCEPTED);
     }
 
+    @CrossOrigin
     @RequestMapping(value = "/create", method = RequestMethod.PUT)
     @ResponseBody
     public ResponseEntity<?> createBlog(@RequestParam String content) {
@@ -67,6 +71,8 @@ public class BlogController {
         }
     }
 
+
+    @CrossOrigin
     @RequestMapping(value = "/like", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<?> likeBlog(@RequestParam String id) {
@@ -81,6 +87,7 @@ public class BlogController {
         return new ResponseEntity(HttpStatus.ACCEPTED);
     }
 
+    @CrossOrigin
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     @ResponseBody
     public ResponseEntity<?> deleteBlog(String id) {
